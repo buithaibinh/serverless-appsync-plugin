@@ -69,7 +69,7 @@ const getConfig = (config, provider, servicePath) => {
     name: config.name || 'api',
     apiId: config.apiId,
     apiKey: config.apiKey,
-    caching: null,
+    caching: config.caching,
     region: provider.region,
     authenticationType: config.authenticationType,
     additionalAuthenticationProviders: config.additionalAuthenticationProviders || [],

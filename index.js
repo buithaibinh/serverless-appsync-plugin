@@ -12,6 +12,7 @@ const RESOURCE_API_KEY = 'GraphQlApiKeyDefault';
 const RESOURCE_SCHEMA = 'GraphQlSchema';
 const RESOURCE_URL = 'GraphQlApiUrl';
 const RESOURCE_API_ID = 'GraphQlApiId';
+const RESOURCE_CACHING = 'GraphQlCaching';
 
 class ServerlessAppsyncPlugin {
   constructor(serverless, options) {
@@ -421,15 +422,18 @@ class ServerlessAppsyncPlugin {
   getApiCachingResource(config) {
     if (config.caching) {
       const logicalIdGraphQLApi = this.getLogicalId(config, RESOURCE_API);
+      const logicalIdCaching = this.getLogicalId(config, RESOURCE_CACHING);
       return {
-        Type: 'AWS::AppSync::ApiCache',
-        Properties: {
-          ApiCachingBehavior: config.caching.behavior,
-          ApiId: { 'Fn::GetAtt': [logicalIdGraphQLApi, 'ApiId'] },
-          AtRestEncryptionEnabled: config.caching.atRestEncryption || false,
-          TransitEncryptionEnabled: config.caching.transitEncryption || false,
-          Ttl: config.caching.ttl || 3600,
-          Type: config.caching.type || 'T2_SMALL',
+        [logicalIdCaching]: {
+          Type: 'AWS::AppSync::ApiCache',
+          Properties: {
+            ApiCachingBehavior: config.caching.behavior,
+            ApiId: { 'Fn::GetAtt': [logicalIdGraphQLApi, 'ApiId'] },
+            AtRestEncryptionEnabled: config.caching.atRestEncryption || false,
+            TransitEncryptionEnabled: config.caching.transitEncryption || false,
+            Ttl: config.caching.ttl || 3600,
+            Type: config.caching.type || 'T2_SMALL',
+          },
         },
       };
     }
